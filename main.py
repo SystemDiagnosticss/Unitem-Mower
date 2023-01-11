@@ -1,8 +1,8 @@
 import threading
 import queue
-import source
 import time
 import cv2
+from source.source import Source
 
 ROWS = 1024
 COLS = 768
@@ -21,9 +21,7 @@ def img_saver(queue):
 
 
 def img_operation(img):
-    img = cv2.resize(
-        img, (int(img.shape[0] / DECREASER), int(img.shape[1] / DECREASER))
-    )
+    img = cv2.resize(img, (int(img.shape[0] / DECREASER), int(img.shape[1] / DECREASER)))
     img = cv2.medianBlur(img, KERNEL)
     return img
 
@@ -49,7 +47,7 @@ def consumer(queue_a, queue_b):
 
 
 def main():
-    img_creator = source.Source((ROWS, COLS, CHANNELS))
+    img_creator = Source((ROWS, COLS, CHANNELS))
 
     queue_a = queue.Queue(maxsize=counter)
     queue_b = queue.Queue(maxsize=counter)
