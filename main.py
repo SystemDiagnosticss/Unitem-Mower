@@ -13,6 +13,7 @@ KERNEL = 5
 DIR = "./processed"
 
 counter = FRAMES
+threads_number = 5
 
 
 def img_saver(queue):
@@ -26,7 +27,7 @@ def img_operation(img):
     return img
 
 
-def producer(img_creator, queue_a, counter):
+def producer(img_creator, queue_a, counter): 
     while counter >= 0:
         queue_a.put(img_creator.get_data())
         time.sleep(0.05)
@@ -36,7 +37,7 @@ def producer(img_creator, queue_a, counter):
 def consumer(queue_a, queue_b):
     while True:
         try:
-            img = None
+            img = None    
             if queue_a.qsize():
                 img = queue_a.get_nowait()
             if img is not None:
@@ -47,22 +48,28 @@ def consumer(queue_a, queue_b):
 
 
 def main():
-    img_creator = Source((ROWS, COLS, CHANNELS))
+    img_creator = Source((ROWS,COLS,CHANNELS))
 
     queue_a = queue.Queue(maxsize=counter)
     queue_b = queue.Queue(maxsize=counter)
 
-    prod_t = threading.Thread(target=producer, args=(img_creator, queue_a, counter))
-    cons_t = threading.Thread(target=consumer, args=(queue_a, queue_b))
+    prod_t = threading.Thread(target=producer,args=(img_creator, queue_a, counter))
 
+    cons_t = []
+    for i in range(threads_number):
+        thread = threading.Thread(target=consumer,args=(queue_a, queue_b))
+        cons_t.append(thread)
+    
     prod_t.start()
-    cons_t.start()
+    for i in cons_t:
+        i.start()
 
     prod_t.join()
-    cons_t.join()
+    for i in cons_t:
+        i.join()
 
-    img_saver(queue_b)
+    img_saver(queue_b)    
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
