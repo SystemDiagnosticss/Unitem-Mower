@@ -1,23 +1,23 @@
 # Unitem-Mower
 
-mplementation Producer-Consumer Pattern using `threading.Thread` and a `queue.Queue` for Unitem test task
+Implementation Producer-Consumer Pattern using `threading.Thread` and a `queue.Queue` for Unitem test task
 
 ## General Information
 
 ### Producer Tasks
-Producer (implemented as a thread) has a data source with size: width=1024px, height=768px, channels=3. In every 50ms a Producer takes new data from Source and put them into a queue A
+Producer (implemented as a thread) has a data source with size: width=1024px, height=768px, channels=3. In every 50ms a Producer takes new data from Source and puts them into a queue A
 
 ### Consumer Tasks
-Consumer (implemented as a thread) takes available data from queue A and makes an operations on the data:
-    - reduce to size of the image twice (final size is 2 times smaller)
-    - apply median filter with kernel 5x5
-After doing that, new image is placed in queue B.
+Consumer (implemented as a thread) takes available data from queue A and makes operations on the data:
+- reduce the size of the image twice (final size is 2 times smaller)
+- apply median filter with kernel 5x5 
+After doing that, a new image is placed in queue B.
 
 ### Main function
-Need to process 100 frames of data and stop the program after that. Also data from queue B should be saved in a folder named "processed" in png format
+Need to process 100 frames of data and stop the program after that. Also, data from queue B should be saved in a folder named "processed" in png format
 
 ### Implementation the Producer-Consumer Pattern
-We have 4 approach to solve this problem:
+We have 4 approaches to solving this problem:
 - One Producer and One Consumer
 - One Producer and Multiple Consumers
 - Multiple Producers and One Consumer
@@ -44,7 +44,3 @@ Program will create 100 files in `processed` folder.
 ```
 $ pytest -s -v tests
 ```
-
-## Additional info
-
-On branch `multi_consumer `
